@@ -83,7 +83,7 @@ NTSTATUS FindKernelModule(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING
 	PLIST_ENTRY FirstEntry = pThisModule->InLoadOrderLinks.Flink;
 
 	// https://m0uk4.gitbook.io/notebooks/mouka/windowsinternal/find-kernel-module-address-todo
-	// Get PsLoadedModuleList address
+	// Loop over the circular linked-list
 	for (PLIST_ENTRY pListEntry = pThisModule->InLoadOrderLinks.Flink;
 		(pListEntry != &pThisModule->InLoadOrderLinks) &
 		(pThisModule->InLoadOrderLinks.Flink != FirstEntry);
