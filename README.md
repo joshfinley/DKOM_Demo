@@ -106,9 +106,9 @@ NTSTATUS FindKernelModule(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING
 ```
 The full source for an example driver can be found [here](https://github.com/joshfinley/DKOM_Demo).
 
-Of course, this none of this is anything new: 
+Of course, none of this is anything new: 
 
 ## References
 - [blackbone implementation to find PsLoadedModuleList](https://github.com/DarthTon/Blackbone/blob/master/src/BlackBoneDrv/Loader.c)
 - [all sorts of ways of finding module addresses](https://m0uk4.gitbook.io/notebooks/mouka/windowsinternal/find-kernel-module-address-todo)
-- [another implementation of basically the same driver](https://vxug.fakedoma.in/papers/Hiding%20loaded%20driver%20with%20DKOM%20.txt)
+- [another implementation of the same driver](https://vxug.fakedoma.in/papers/Hiding%20loaded%20driver%20with%20DKOM%20.txt)
