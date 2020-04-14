@@ -149,7 +149,7 @@ NextListEntry->Blink = PrevListEntry;
 CurrentListEntry->Flink = CurrentListEntry;
 CurrentListEntry->Blink = CurrentListEntry;
 ```
-On Windows 10 1901 build 18363, the `ActiveProcessLinks` member is located at offset 0x2f0. This offset changes between builds.
+On Windows 10 1901 build 18363, the `ActiveProcessLinks` member is located at offset `0x2f0`. This offset changes between builds.
 
 The full source for an example driver can be found [here](https://github.com/joshfinley/DKOM_Demo).
 
