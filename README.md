@@ -159,4 +159,4 @@ Of course, none of this is anything new:
 - [blackbone implementation to find PsLoadedModuleList](https://github.com/DarthTon/Blackbone/blob/master/src/BlackBoneDrv/Loader.c)
 - [all sorts of ways of finding module addresses](https://m0uk4.gitbook.io/notebooks/mouka/windowsinternal/find-kernel-module-address-todo)
 - [another implementation of the same driver hiding functionality](https://vxug.fakedoma.in/papers/Hiding%20loaded%20driver%20with%20DKOM%20.txt)
-- [the reference implementation for the process hiding functionality(https://vxug.fakedoma.in/papers/Hide%20process%20with%20DKOM%20without%20hardcoded%20offsets.txt)
+- [the reference implementation for the process hiding functionality](https://vxug.fakedoma.in/papers/Hide%20process%20with%20DKOM%20without%20hardcoded%20offsets.txt)
