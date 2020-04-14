@@ -139,7 +139,7 @@
     <FilesToPackage Include="$(TargetPath)" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source.cpp" />
+    <ClCompile Include="DKOM_Demo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DKOM_DemoCommon.h" />
