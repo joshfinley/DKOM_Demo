@@ -1,6 +1,6 @@
 # Windows DKOM Demo
 
-This is an implementation of a simple driver which modifies kernel data structures to remove itself from the `PsLoadedModuleList` structure. Disclaimer: PG protects against this. Weaponizanble by chaining with a PG bypass.
+This is an implementation of a simple driver which modifies kernel data structures to remove itself from the `PsLoadedModuleList` structure. It also has functionality to hide processes by their ID. Disclaimer: PG protects against this. Weaponizanble by chaining with a PG bypass.
 
 ---
 
