@@ -103,20 +103,16 @@ NTSTATUS FindKernelModule(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING
 	PLIST_ENTRY FirstEntry = pThisModule->InLoadOrderLinks.Flink;
 
 	// https://m0uk4.gitbook.io/notebooks/mouka/windowsinternal/find-kernel-module-address-todo
-	// Get PsLoadedModuleList address
+	// Search for module
 	for (PLIST_ENTRY pListEntry = pThisModule->InLoadOrderLinks.Flink;
 		(pListEntry != &pThisModule->InLoadOrderLinks) &
 		(pThisModule->InLoadOrderLinks.Flink != FirstEntry);
 		pListEntry = pListEntry->Flink)
 	{
-		// Search for Ntoskrnl entry
 		PKLDR_DATA_TABLE_ENTRY pEntry = CONTAINING_RECORD(
 			pListEntry, KLDR_DATA_TABLE_ENTRY, InLoadOrderLinks);
 
 		if (RtlEqualUnicodeString(DriverName, &pEntry->BaseDllName, true)) {
-			// Ntoskrnl is always the first entry in the list
-			// so the previous entry is the PsLoadedModuleList
-			// check if the found pointer belongs to Ntoskrnl module
 			KModEntry = pListEntry;
 			return STATUS_SUCCESS;
 		}
