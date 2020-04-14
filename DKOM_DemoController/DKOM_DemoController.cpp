@@ -44,9 +44,9 @@ int main(int argc, const char* argv[])
         nullptr, 0,                     // output buffer and length
         &returned, nullptr);
     if (success)
-        std::cout << "Process sucessfully hidden!";
+        std::cout << "Process successfully hidden!" << std::endl;
     else
-        Error("Process unsucessfully hidden");
+        Error("Process hiding failed");
 
     success = DeviceIoControl(
         hDevice,
@@ -54,6 +54,10 @@ int main(int argc, const char* argv[])
         NULL, NULL          ,          // input buffer and length
         nullptr, 0,                    // output buffer and length
         &returned, nullptr);
+    if (success)
+        std::cout << "Driver successfully hidden!" << std::endl;
+    else
+        Error("Driver hiding failed");
 
     CloseHandle(hDevice);
 
